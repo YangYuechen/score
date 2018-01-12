@@ -14,24 +14,10 @@ import xlrd
 import xlwt
 from xlutils.copy import copy
 
-docx_path = 'F:\\py\\dst_docx\\' #要分析的文件目录
-student_idname = 'F:\\py\\78.xls'
-score_fiel = 'F:\\py\\78score.xls'
+docx_path = 'F:\\pythoncode\\score\\dst_docx\\' #要分析的文件目录
+student_idname = 'F:\\pythoncode\\score\\jk152078.xls'
+score_fiel = 'F:\\pythoncode\\score\\jk152078score.xls'
 
-def get_contents_from_file():
-    contents_list = []
-    file_list = os.listdir("doc")
-    for file in file_list:
-        print(file)
-
-
-    document = docx.Document("doc/"+file)
-
-    for paragraph in document.paragraphs:
-        #docText = '\n\n'.join([
-        contents_list.append(paragraph.text.encode('utf-8'))
-        #])
-    return contents_list
 
 def get_max_min_size():
     min = 0
@@ -130,7 +116,7 @@ def parase_all_and_insert_db():
         for text in contents_list:
             splits = jieba.cut(text)
             for word in splits:
-                words_list.append(word)
+                words_list.append(word.lower())
 
     # 统计分词频率，计入数据库
     counter = collections.Counter(words_list)
@@ -144,7 +130,7 @@ def parase_all_and_insert_db():
 
 
     # 清洗无用数据
-    clean_date_table = ['的', ' ', '\t', '\n', '、']
+    clean_date_table = ['的', ' ', '\t', '\n', '、', '.', '，', '/', '；', '（', '）']
     for clean_item in clean_date_table:
         sqli = "delete from words_temp  where words_content = '{0}';"
         sqlm = sqli.format(clean_item)

@@ -7,8 +7,8 @@ import shutil
 
 word = wc.Dispatch('Word.Application')
 
-src_path = r"F:\py\src_doc"
-dst_path = r'F:\py\dst_docx'
+src_path = r"F:\pythoncode\score\src_doc"
+dst_path = r'F:\pythoncode\score\dst_docx'
 
 def doc2docx(src_dir, dst_dir):
     i = 0

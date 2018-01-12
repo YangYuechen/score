@@ -1,0 +1,5 @@
+pip install pypiwin32    or  python -m pip install pypiwin32
+pip install xlwt
+pip install python-docx
+pip install jieba
+pip install xlrd
