@@ -22,6 +22,8 @@ docx_path_78 = 'F:\\pythoncode\\score\\dst_docx_78\\' #要分析的文件目录
 student_idname_78 = 'F:\\pythoncode\\score\\jk152078.xls'
 score_fiel_78 = 'F:\\pythoncode\\score\\jk152078score.xls'
 
+docx_path_all = 'F:\\pythoncode\\score\\dst_docx_all\\'
+
 def get_max_min_size(docx_path):
     min = 0
     max = 0
@@ -103,7 +105,7 @@ def parase_all_and_record_score(docx_path,student_idname,score_fiel):
     dest_excel_file.save(score_fiel)
 
 def parase_all_and_insert_db(docx_path):
-    clear_table('words_temp')  # 清除数据
+    clear_table('words_temp')  # 清除数据表
     operatMySQl = OperateMySQL()
 
     jieba.load_userdict("dict.txt")
@@ -154,14 +156,14 @@ if __name__ == '__main__':
     starttime = datetime.datetime.now()
     print('Start time is %s.' % (str(datetime.datetime.now())))
 
-    parase_all_and_insert_db(docx_path_56)
-
-    parase_all_and_record_score(docx_path_56,student_idname_56,score_fiel_56)
+    #插入数据库是5,6 和 7,8 只能各自处理，如果需要统计总的需要特殊处理
+    #parase_all_and_insert_db(docx_path_56)
+    #parase_all_and_record_score(docx_path_56,student_idname_56,score_fiel_56)
 
     #parase_all_and_insert_db(docx_path_78)
-
     #parase_all_and_record_score(docx_path_78,student_idname_78,score_fiel_78)
 
+    parase_all_and_insert_db(docx_path_all)
     # 程序结束时间 及 耗时
     timedelta = datetime.datetime.now() - starttime
     print('End time is %s.' % (str(datetime.datetime.now())))

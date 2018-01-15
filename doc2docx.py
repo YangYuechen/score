@@ -12,6 +12,7 @@ src_path_56 = r"F:\pythoncode\score\src_doc_56"
 dst_path_56 = r'F:\pythoncode\score\dst_docx_56'
 src_path_78 = r"F:\pythoncode\score\src_doc_78"
 dst_path_78 = r'F:\pythoncode\score\dst_docx_78'
+dst_path_all = r'F:\pythoncode\score\dst_docx_all'
 
 def doc2docx(src_dir, dst_dir):
     if(os.path.exists(dst_dir)):
@@ -91,16 +92,36 @@ def docx2doc(src_dir, dst_dir):
     print('其中成功的有：' + str(i - j) + '个')
     print('失败的共有:' + str(j) + '个')
 
+def copy_file_from_src_to_dst(src_dir,dst_dir):
+    for wordFile in os.listdir(src_dir):
+        # 若是文件
+        dotIndex = wordFile.rfind(".")
+        if (dotIndex != -1):
+            try:
+                fileSuffix = wordFile[(dotIndex + 1):]
+                if (fileSuffix == "docx"):
+                    source_file = os.path.join(src_dir, wordFile)
+                    dst_file = os.path.join(dst_dir, wordFile)
+                    shutil.copy(source_file, dst_file)
+            except Exception:
+                print("Error copy file")
 
 if __name__ == '__main__':
     starttime = datetime.datetime.now()
     print('Start time is %s.' % (str(datetime.datetime.now())))
 
     #docx2doc(r"H:\My\stock\doc")
+    #转换5,6班
+    #doc2docx(src_path_56, dst_path_56)
+    # 转换7,8班
+    #doc2docx(src_path_78, dst_path_78)
 
-    doc2docx(src_path_56, dst_path_56)
-
-    doc2docx(src_path_78, dst_path_78)
+    # 转换5,6，7,8班
+    if (os.path.exists(dst_path_all)):
+        shutil.rmtree(dst_path_all)
+    os.mkdir(dst_path_all)
+    copy_file_from_src_to_dst(src_path_56, dst_path_all)
+    copy_file_from_src_to_dst(src_path_78, dst_path_all)
 
     word.Quit()
 
