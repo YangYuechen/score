@@ -22,7 +22,7 @@ docx_path_78 = 'F:\\pythoncode\\score\\dst_docx_78\\' #要分析的文件目录
 student_idname_78 = 'F:\\pythoncode\\score\\jk152078.xls'
 score_fiel_78 = 'F:\\pythoncode\\score\\jk152078score.xls'
 
-def get_max_min_size():
+def get_max_min_size(docx_path):
     min = 0
     max = 0
     file_list = os.listdir(docx_path)
@@ -75,8 +75,13 @@ def parase_all_and_record_score(docx_path,student_idname,score_fiel):
     read_table = source_excel_file.sheet_by_name(u'Sheet1')  # 通过名称获取
     write_table = dest_excel_file.get_sheet(0)
 
-    max, min = get_max_min_size()
+    max, min = get_max_min_size(docx_path)
     file_list = os.listdir(docx_path)
+
+    #初始化所有人成绩为0
+    for i in range(read_table.nrows):
+        get_name_fromcell = read_table.cell(i, 2).value
+        write_table.write(i, 3, 0)
 
     for file_name in file_list:
         file_name_list = []
