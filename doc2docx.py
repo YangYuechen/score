@@ -16,6 +16,7 @@ dst_path_all = r'F:\pythoncode\score\dst_docx_all'
 
 def doc2docx(src_dir, dst_dir):
     if(os.path.exists(dst_dir)):
+        print("delete ", dst_dir)
         shutil.rmtree(dst_dir)
     os.mkdir(dst_dir)
 
@@ -112,16 +113,17 @@ if __name__ == '__main__':
 
     #docx2doc(r"H:\My\stock\doc")
     #×ª»»5,6°à
-    #doc2docx(src_path_56, dst_path_56)
+    doc2docx(src_path_56, dst_path_56)
     # ×ª»»7,8°à
-    #doc2docx(src_path_78, dst_path_78)
+    doc2docx(src_path_78, dst_path_78)
 
-    # ×ª»»5,6£¬7,8°à
-    if (os.path.exists(dst_path_all)):
-        shutil.rmtree(dst_path_all)
-    os.mkdir(dst_path_all)
-    copy_file_from_src_to_dst(src_path_56, dst_path_all)
-    copy_file_from_src_to_dst(src_path_78, dst_path_all)
+    if 0:
+        # ×ª»»5,6£¬7,8°à
+        if (os.path.exists(dst_path_all)):
+            shutil.rmtree(dst_path_all)
+        os.mkdir(dst_path_all)
+        copy_file_from_src_to_dst(src_path_56, dst_path_all)
+        copy_file_from_src_to_dst(src_path_78, dst_path_all)
 
     word.Quit()
 

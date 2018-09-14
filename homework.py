@@ -9,7 +9,7 @@ import codecs
 from util.operate_mysql import *
 from util.operate_mysql import clear_table as clear_table
 import docx
-import doc
+#import doc
 import xlrd
 import xlwt
 from xlutils.copy import copy
@@ -23,6 +23,8 @@ student_idname_78 = 'F:\\pythoncode\\score\\jk152078.xls'
 score_fiel_78 = 'F:\\pythoncode\\score\\jk152078score.xls'
 
 docx_path_all = 'F:\\pythoncode\\score\\dst_docx_all\\'
+
+pingyu_56  = 'F:\\pythoncode\\score\\pingyu_56\\' #评语输出目录
 
 def get_max_min_size(docx_path):
     min = 0
@@ -80,28 +82,54 @@ def parase_all_and_record_score(docx_path,student_idname,score_fiel):
     max, min = get_max_min_size(docx_path)
     file_list = os.listdir(docx_path)
 
+    #设置单元格格式，初始全部写入0和黄底
+    pattern = xlwt.Pattern()  # Create the Pattern
+    pattern.pattern = xlwt.Pattern.SOLID_PATTERN  # May be: NO_PATTERN, SOLID_PATTERN, or 0x00 through 0x12
+    pattern.pattern_fore_colour = 5  # May be: 8 through 63. 0 = Black, 1 = White, 2 = Red, 3 = Green, 4 = Blue, 5 = Yellow, 6 = Magenta, 7 = Cyan, 16 = Maroon, 17 = Dark Green, 18 = Dark Blue, 19 = Dark Yellow , almost brown), 20 = Dark Magenta, 21 = Teal, 22 = Light Gray, 23 = Dark Gray, the list goes on...
+    style = xlwt.XFStyle()  # Create the Pattern
+    style.pattern = pattern  # Add Pattern to Style
+
     #初始化所有人成绩为0
     for i in range(read_table.nrows):
-        get_name_fromcell = read_table.cell(i, 2).value
-        write_table.write(i, 3, 0)
+        write_table.write(i, 3, 0, style)
 
+    for i in range(read_table.nrows):
+        write_table.write(i, 4, 0, style)
+
+    student_namelist = []
     for file_name in file_list:
         file_name_list = []
         file_name_list = file_name.split('-')
+
         student_tmp = file_name_list[2].split(".")
-        student_name = student_tmp[0]
+        #student_name = student_tmp[0]
+
+        student_name = file_name_list[1]
+
+
+        student_namelist.append(student_name)
         score = 0
+        find=0
         for i in range(read_table.nrows):
             get_name_fromcell = read_table.cell(i,2).value
             if(get_name_fromcell == student_name):
-                print(student_tmp)
+                #print(student_tmp)
                 if student_tmp[1] == "docx":
                     score = get_score_from_file(docx_path+file_name, max, min)
+                else:
+                    print("Error:", student_tmp)
                 #elif student_tmp == "doc":
                 #    document = doc.Document(file_name)
                 #    score = get_score_from_file(document, max, min)
                 write_table.write(i, 3, score)
 
+                write_table.write(i, 4, 1)
+                find = 1
+        if(find == 0):
+            print("没有学生：",file_name, student_name)
+
+    counter = collections.Counter(student_namelist)
+    print(counter)
     dest_excel_file.save(score_fiel)
 
 def parase_all_and_insert_db(docx_path):
@@ -158,12 +186,12 @@ if __name__ == '__main__':
 
     #插入数据库是5,6 和 7,8 只能各自处理，如果需要统计总的需要特殊处理
     #parase_all_and_insert_db(docx_path_56)
-    #parase_all_and_record_score(docx_path_56,student_idname_56,score_fiel_56)
+    parase_all_and_record_score(docx_path_56,student_idname_56,score_fiel_56)
 
     #parase_all_and_insert_db(docx_path_78)
     #parase_all_and_record_score(docx_path_78,student_idname_78,score_fiel_78)
 
-    parase_all_and_insert_db(docx_path_all)
+    #parase_all_and_insert_db(docx_path_all)
     # 程序结束时间 及 耗时
     timedelta = datetime.datetime.now() - starttime
     print('End time is %s.' % (str(datetime.datetime.now())))
