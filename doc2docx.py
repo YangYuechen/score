@@ -13,12 +13,15 @@ dst_path_56 = r'F:\pythoncode\score\dst_docx_56'
 src_path_78 = r"F:\pythoncode\score\src_doc_78"
 dst_path_78 = r'F:\pythoncode\score\dst_docx_78'
 dst_path_all = r'F:\pythoncode\score\dst_docx_all'
+src_doc_all = r'F:\pythoncode\score\src_doc_all'
 
 def doc2docx(src_dir, dst_dir):
+    '''
     if(os.path.exists(dst_dir)):
         print("delete ", dst_dir)
         shutil.rmtree(dst_dir)
     os.mkdir(dst_dir)
+    '''
 
     i = 0
     j = 0
@@ -111,11 +114,13 @@ if __name__ == '__main__':
     starttime = datetime.datetime.now()
     print('Start time is %s.' % (str(datetime.datetime.now())))
 
+    doc2docx(src_doc_all, dst_path_all)
     #docx2doc(r"H:\My\stock\doc")
     #×ª»»5,6°à
-    doc2docx(src_path_56, dst_path_56)
+    #doc2docx(src_path_56, dst_path_56)
+
     # ×ª»»7,8°à
-    doc2docx(src_path_78, dst_path_78)
+    #doc2docx(src_path_78, dst_path_78)
 
     if 0:
         # ×ª»»5,6£¬7,8°à

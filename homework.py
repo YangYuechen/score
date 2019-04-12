@@ -26,6 +26,9 @@ docx_path_all = 'F:\\pythoncode\\score\\dst_docx_all\\'
 
 pingyu_56  = 'F:\\pythoncode\\score\\pingyu_56\\' #评语输出目录
 
+student_idname_16 = 'F:\\pythoncode\\score\\jk16.xls'
+score_fiel_16 = 'F:\\pythoncode\\score\\jk16score.xls'
+
 def get_max_min_size(docx_path):
     min = 0
     max = 0
@@ -102,10 +105,8 @@ def parase_all_and_record_score(docx_path,student_idname,score_fiel):
         file_name_list = file_name.split('-')
 
         student_tmp = file_name_list[2].split(".")
-        #student_name = student_tmp[0]
-
-        student_name = file_name_list[1]
-
+        student_name = student_tmp[0]
+        #student_name = file_name_list[1]
 
         student_namelist.append(student_name)
         score = 0
@@ -113,7 +114,7 @@ def parase_all_and_record_score(docx_path,student_idname,score_fiel):
         for i in range(read_table.nrows):
             get_name_fromcell = read_table.cell(i,2).value
             if(get_name_fromcell == student_name):
-                #print(student_tmp)
+                #print(student_tmp,file_name_list)
                 if student_tmp[1] == "docx":
                     score = get_score_from_file(docx_path+file_name, max, min)
                 else:
@@ -129,6 +130,7 @@ def parase_all_and_record_score(docx_path,student_idname,score_fiel):
             print("没有学生：",file_name, student_name)
 
     counter = collections.Counter(student_namelist)
+    print(len(counter))
     print(counter)
     dest_excel_file.save(score_fiel)
 
@@ -186,12 +188,14 @@ if __name__ == '__main__':
 
     #插入数据库是5,6 和 7,8 只能各自处理，如果需要统计总的需要特殊处理
     #parase_all_and_insert_db(docx_path_56)
-    parase_all_and_record_score(docx_path_56,student_idname_56,score_fiel_56)
+    #parase_all_and_record_score(docx_path_56,student_idname_56,score_fiel_56)
 
     #parase_all_and_insert_db(docx_path_78)
     #parase_all_and_record_score(docx_path_78,student_idname_78,score_fiel_78)
 
-    #parase_all_and_insert_db(docx_path_all)
+    parase_all_and_insert_db(docx_path_all)
+
+    #parase_all_and_record_score(docx_path_all, student_idname_16, score_fiel_16)
     # 程序结束时间 及 耗时
     timedelta = datetime.datetime.now() - starttime
     print('End time is %s.' % (str(datetime.datetime.now())))

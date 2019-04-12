@@ -13,6 +13,7 @@ import docx
 import xlrd
 import xlwt
 from xlutils.copy import copy
+from docx.oxml.ns import qn
 
 docx_path_56 = 'F:\\pythoncode\\score\\dst_docx_56\\' #要分析的文件目录
 student_idname_56 = 'F:\\pythoncode\\score\\jk152056.xls'
@@ -26,6 +27,10 @@ docx_path_all = 'F:\\pythoncode\\score\\dst_docx_all\\'
 
 pingyu_56  = 'F:\\pythoncode\\score\\pingyu_56\\' #评语输出目录
 score_pingyu_56 = 'F:\\pythoncode\\score\\score_pingyu_56.xls'
+score_pingyu_78 = 'F:\\pythoncode\\score\\score_pingyu_78.xls'
+
+#score_pingyu_56 = 'F:\\pythoncode\\score\\yytmp.xls'
+#pingyu_56  = 'F:\\pythoncode\\score\\yypingyu\\' #评语输出目录
 
 def get_max_min_size(docx_path):
     min = 0
@@ -74,29 +79,89 @@ def get_score_from_file(file_name, max, min):
 def insert_pingyu(file_name,input_path, outpu_path, score):
     document = docx.Document(input_path+file_name)
     tables = document.tables
+    try:
+        if(score.isdigit() == True):
+            score = int(score,10)
+        else:
+            print(file_name)
+            return
+    except:
+        pass
 
     lasttable = None
+    firsttable = None
     for table in tables:
+        if firsttable is None:
+            firsttable = table
         lasttable = table
+    '''
+    fm_cells = firsttable.rows[0].cells
+    fm_cells[1].paragraphs[0].style.font.name = '黑体'
+    fm_cells[1].paragraphs[0].style.font.size = 155000  # 小四号字体
+    fm_cells[1].text = '项目'
+    '''
 
+    pingyu = ''
+
+    if score >= 10 and score < 60:
+        pingyu = '该生在实训过程中，态度较较差，对团队工作贡献较少，未达到小学期的实训要求。'
+    elif score >= 60 and score < 65:
+        pingyu = '该生在实训过程中，态度一般，对团队工作贡献较为一般，所搭建系统完成了项目要求的功能，基本达到了实训要求。'
+    elif score >= 65 and score < 70:
+        pingyu = '该生在实训过程中，态度一般，在团队中做了一定的工作，所搭建系统完成了项目要求的功能，基本达到了实训要求。'
+    elif score >= 70 and score < 80:
+        pingyu = '该生在实训过程中，态度认真，在团队中做了一定的工作，所搭建系统完成了大部分项目要求的功能，达到了实训要求。'
+    elif score >= 80 and score < 90:
+        pingyu = '该生在实训过程中，态度比较认真，对团队贡献较大，所搭建系统完成了所有项目要求的功能，并完成了部分增强功能，较好的达到了实训要求。'
+    elif score >= 90 and score <= 100:
+        pingyu = '该生在实训过程中，态度非常认真，积极帮助其他同学，所搭建系统完成了所有项目要求的功能，并完成了部分增强功能，很好的达到了实训要求。'
+    else:
+        print("没有学生成绩：", file_name, score)
+
+
+    ''' #yueyue的评语
+    if score >= 60 and score < 70:
+        pingyu = '该生在小学期实训过程中，态度较认真，但对团队工作贡献一般，拓扑搭建完成了连通的基本功能，基本达到了小学期的实训要求。'
+    elif score >= 70 and score < 75:
+        pingyu = '该生在小学期实训过程中，态度认真，在团队中做了一定的工作，拓扑搭建完成了部分增强功能，达到了小学期的实训要求。'
+    elif score >= 75 and score < 80:
+        pingyu = '该生在小学期实训过程中，态度认真，对团队贡献较大，拓扑搭建完成了大部分功能，较好的达到了小学期的实训目的。'
+    elif score >= 80:
+        pingyu = '该生在小学期实训过程中，态度认真，积极帮助其他同学，拓扑搭建基本完成了所有功能，很好的达到了小学期的实训目的。'
+    else:
+        print("没有学生成绩：", file_name, score)
+    '''
+    #'''
     hdr_cells = lasttable.rows[0].cells
-    hdr_cells[1].text = '团队合作能集思广益加强开发的效率，培养人的交流沟通能力和团队协作能力。还有独立的思考固然重要，但有的时候一味的转牛角尖并不是一件好事，不但解决不了问题还对自己造成过大的压力'
+    #lasttable.cell(0, 0).paragraphs[0].style.font.name = 'liguofu'
+    #lasttable.cell(0, 0).paragraphs[0].style.font.color.rgb = RGBColor(22, 120, 190)
+    #hdr_cells[0].paragraphs[0].style.font.name = 'liguofu'
+
+    #document.styles['Normal'].font.name = u'liguofu'
+    #document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'liguofu')
+
+    #hdr_cells[1].paragraphs[0].style.font.name = u'liguofu'
+   # hdr_cells[1].paragraphs[0].style._element.rPr.rFonts.set(qn('w:eastAsia'), u'liguofu')
+
+    hdr_cells[1].paragraphs[0].style.font.size = 155000 #小四号字体
+    hdr_cells[1].text = pingyu
 
     hdr_cells = lasttable.rows[1].cells
     hdr_cells[1].text = str(int(score))
 
     hdr_cells = lasttable.rows[2].cells
-    hdr_cells[1].text = '李楸桐'
-    hdr_cells[3].text = '2018年9月16日'
+    #hdr_cells[1].text = '李楸桐'
+    hdr_cells[3].text = '2018年12月3日'
+    #'''
 
     #print(len(lasttable.rows))
     #print(len(lasttable.columns))
     document.save(outpu_path+file_name)
 
 #将excel中成绩写入对应word
-def parase_all_and_insert_pingyu(docx_path,outpu_path):
+def parase_all_and_insert_pingyu(docx_path,outpu_path,score_pingyu):
     # 打开学生成绩excel
-    source_excel_file = xlrd.open_workbook(score_pingyu_56)
+    source_excel_file = xlrd.open_workbook(score_pingyu)
     read_table = source_excel_file.sheet_by_name(u'Sheet1')  # 通过名称获取
 
     file_list = os.listdir(docx_path)
@@ -107,16 +172,40 @@ def parase_all_and_insert_pingyu(docx_path,outpu_path):
         student_name = student_tmp[1]
         score = 0
         find = 0
+        banji = 0
+        xuehao = ''
         for i in range(read_table.nrows):
             get_name_fromcell = read_table.cell(i, 2).value
             if (get_name_fromcell == student_name):
                 # print(student_tmp)
                 score = read_table.cell(i, 3).value # 取成绩
+                xuehao = read_table.cell(i,1).value # 取成绩
+                banji = read_table.cell(i,0).value # 取成绩
                 find = 1
         if (find == 0):
             print("没有学生：", file_name, student_name)
         else:
             insert_pingyu(file_name, docx_path, outpu_path, score)
+            '''
+            if banji == 6:
+                pingyu = ''
+
+                if score >= 10 and score < 60:
+                    pingyu = '该生在实训过程中，态度较较差，对团队工作贡献较少，未达到小学期的实训要求。'
+                elif score >= 60 and score < 65:
+                    pingyu = '该生在实训过程中，态度一般，对团队工作贡献较为一般，所搭建系统完成了项目要求的功能，基本达到了实训要求。'
+                elif score >= 65 and score < 70:
+                    pingyu = '该生在实训过程中，态度一般，在团队中做了一定的工作，所搭建系统完成了项目要求的功能，基本达到了实训要求。'
+                elif score >= 70 and score < 80:
+                    pingyu = '该生在实训过程中，态度认真，在团队中做了一定的工作，所搭建系统完成了大部分项目要求的功能，达到了实训要求。'
+                elif score >= 80 and score < 90:
+                    pingyu = '该生在实训过程中，态度比较认真，对团队贡献较大，所搭建系统完成了所有项目要求的功能，并完成了部分增强功能，较好的达到了实训要求。'
+                elif score >= 90 and score <= 100:
+                    pingyu = '该生在实训过程中，态度非常认真，积极帮助其他同学，所搭建系统完成了所有项目要求的功能，并完成了部分增强功能，很好的达到了实训要求。'
+                else:
+                    print("没有学生成绩：", file_name, score)
+                print(xuehao,',',student_name,',', score,',',pingyu)
+            '''
 
 def parase_all_and_record_score(docx_path,student_idname,score_fiel):
     #打开学生名单excel，copy一份另存并写入成绩
@@ -239,7 +328,9 @@ if __name__ == '__main__':
 
     #parase_all_and_insert_db(docx_path_all)
 
-    parase_all_and_insert_pingyu(docx_path_56,pingyu_56)
+    #parase_all_and_insert_pingyu(docx_path_56,pingyu_56, score_pingyu_56)
+
+    parase_all_and_insert_pingyu(docx_path_78, pingyu_56, score_pingyu_78)
     # 程序结束时间 及 耗时
     timedelta = datetime.datetime.now() - starttime
     print('End time is %s.' % (str(datetime.datetime.now())))
